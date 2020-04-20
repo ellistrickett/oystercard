@@ -12,4 +12,10 @@ RSpec.describe Oystercard do
     subject.top_up(10)
     expect(subject.balance).to eq 10
   end
+
+  it 'has a limit of £90' do 
+    max_balance = Oystercard::MAX_BALANCE
+    subject.top_up(max_balance)
+    expect{ subject.top_up(90) }.to raise_error "Maximum Balance £#{max_balance} exceeded"
+  end
 end
