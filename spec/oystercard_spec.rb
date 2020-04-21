@@ -1,5 +1,6 @@
 require 'oystercard'
-RSpec.describe Oystercard do 
+RSpec.describe Oystercard do
+  let(:station){ double :station } 
 
   it 'has a default balance of 0' do 
     expect(subject.balance).to eq 0
@@ -24,30 +25,37 @@ RSpec.describe Oystercard do
   it 'starts off not in a journey' do 
     expect(subject).not_to be_in_journey
   end
-  
+
   describe '#touch_in' do 
     it 'touches in' do
       subject.top_up(10)
-      subject.touch_in
+      subject.touch_in(station) 
       expect(subject).to be_in_journey
     end
     it 'raises error if balance is less than £1' do
-      expect{ subject.touch_in }.to raise_error 'Insufficient funds'
+      expect{ subject.touch_in(station)  }.to raise_error 'Insufficient funds'
     end
   end
   describe '#touch_out' do 
     before do 
       subject.top_up(10) 
-      subject.touch_in
+      subject.touch_in(station) 
     end
     it 'touches out' do
       subject.touch_out
       expect(subject).not_to be_in_journey
     end
-    it 'deducts minumu fare from balance' do
-      subject.top_up(10) 
-      subject.touch_in  
+    it 'deducts minumum fare from balance' do 
       expect{ subject.touch_out }.to change{ subject.balance }.by -1
+    end
+  end
+
+  describe '#station' do 
+
+    it 'stores the entry station' do 
+      subject.top_up(10)
+      subject.touch_in(station) 
+      expect(subject.entry_station).to eq station
     end
   end
 end 
