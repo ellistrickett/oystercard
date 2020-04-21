@@ -23,13 +23,19 @@ RSpec.describe Oystercard do
   it 'starts off not in a journey' do 
     expect(subject).not_to be_in_journey
   end
-
-  it 'touches in' do
-    subject.touch_in
-    expect(subject).to be_in_journey
+  describe '#touch_in' do 
+    it 'touches in' do
+      subject.top_up(10)
+      subject.touch_in
+      expect(subject).to be_in_journey
+    end
+    it 'raises error if balance is less than £1' do
+      expect{ subject.touch_in }.to raise_error 'Insufficient funds'
+    end
   end
 
-  it 'touches out' do 
+  it 'touches out' do
+    subject.top_up(10) 
     subject.touch_in
     subject.touch_out
     expect(subject).not_to be_in_journey
