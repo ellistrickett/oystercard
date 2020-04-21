@@ -12,5 +12,4 @@ class Oystercard
     raise "Maximum Balance £#{MAX_BALANCE} exceeded" if amount + balance > MAX_BALANCE 
     @balance += amount
   end
-
 end
