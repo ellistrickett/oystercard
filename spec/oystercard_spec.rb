@@ -14,4 +14,24 @@ RSpec.describe Oystercard do
     subject.top_up(max_balance)
     expect{ subject.top_up(90) }.to raise_error "Maximum Balance £#{max_balance} exceeded"
   end
+
+  it 'deducts money from balance' do
+    subject.top_up(10) 
+    expect{ subject.deduct 3 }.to change{ subject.balance }.by -3
+  end
+
+  it 'starts off not in a journey' do 
+    expect(subject).not_to be_in_journey
+  end
+
+  it 'touches in' do
+    subject.touch_in
+    expect(subject).to be_in_journey
+  end
+
+  it 'touches out' do 
+    subject.touch_in
+    subject.touch_out
+    expect(subject).not_to be_in_journey
+  end
 end 
